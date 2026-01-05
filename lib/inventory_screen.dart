@@ -87,8 +87,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
     );
   }
 
-  void _deleteItem(int id) async {
-    await DatabaseHelper.instance.delete(id);
+  void _deleteItem(InventoryItem item) async {
+    await DatabaseHelper.instance.delete(item.id!, item.name);
     _refreshItems();
   }
 
@@ -128,7 +128,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                           ),
                           IconButton(
                             icon: const Icon(Icons.delete),
-                            onPressed: () => _deleteItem(item.id!),
+                            onPressed: () => _deleteItem(item),
                           ),
                         ],
                       ),
