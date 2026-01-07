@@ -22,13 +22,15 @@ class InventoryApp extends StatelessWidget {
     return MaterialApp(
       title: 'Inventory App',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.purple),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color.fromARGB(255, 255, 255, 255),
+        ),
         useMaterial3: true,
       ),
       // Force dark mode for the whole app
       darkTheme: ThemeData.dark().copyWith(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blue,
+          seedColor: const Color.fromARGB(255, 168, 5, 5),
           brightness: Brightness.dark,
         ),
       ),

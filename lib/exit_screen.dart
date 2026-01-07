@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'login_screen.dart';
@@ -20,10 +22,21 @@ class ExitScreen extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                SystemNavigator.pop();
+                if (Platform.isAndroid) {
+                  SystemNavigator.pop();
+                } else if (Platform.isIOS) {
+                  // iOS discourages programmatic exits; just pop to previous route.
+                  Navigator.pop(context);
+                } else {
+                  // On desktop (Windows, macOS, Linux) exit the process.
+                  exit(0);
+                }
               },
               style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              child: const Text('Exit Now', style: TextStyle(color: Colors.white)),
+              child: const Text(
+                'Exit Now',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
             const SizedBox(height: 10),
             TextButton(

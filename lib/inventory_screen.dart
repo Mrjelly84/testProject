@@ -43,12 +43,10 @@ class _InventoryScreenState extends State<InventoryScreen> {
             onPressed: () async {
               final name = _itemController.text;
               if (name.isNotEmpty) {
-                await DatabaseHelper.instance.create(
-                  InventoryItem(name: name),
-                );
+                await DatabaseHelper.instance.create(InventoryItem(name: name));
                 await _refreshItems();
               }
-              if (mounted) {
+              if (context.mounted) {
                 Navigator.pop(context);
               }
             },
@@ -76,7 +74,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                 );
                 await _refreshItems();
               }
-              if (mounted) {
+              if (context.mounted) {
                 Navigator.pop(context);
               }
             },
@@ -106,35 +104,35 @@ class _InventoryScreenState extends State<InventoryScreen> {
                 MaterialPageRoute(builder: (context) => const ExitScreen()),
               );
             },
-          )
+          ),
         ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _items.isEmpty
-              ? const Center(child: Text('No items yet'))
-              : ListView.builder(
-                  itemCount: _items.length,
-                  itemBuilder: (context, index) {
-                    final item = _items[index];
-                    return ListTile(
-                      title: Text(item.name),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.edit),
-                            onPressed: () => _editItem(item),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () => _deleteItem(item),
-                          ),
-                        ],
+          ? const Center(child: Text('No items yet'))
+          : ListView.builder(
+              itemCount: _items.length,
+              itemBuilder: (context, index) {
+                final item = _items[index];
+                return ListTile(
+                  title: Text(item.name),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.edit),
+                        onPressed: () => _editItem(item),
                       ),
-                    );
-                  },
-                ),
+                      IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () => _deleteItem(item),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addItem,
         child: const Icon(Icons.add),
