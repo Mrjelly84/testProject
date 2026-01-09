@@ -16,18 +16,28 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _login() async {
     final username = _usernameController.text;
-    if (username.isNotEmpty && _passwordController.text.isNotEmpty) {
+    final password = _passwordController.text;
+    try {
+      if (username.isEmpty || password.isEmpty) {
+        throw Exception('Please enter username and password');
+      }
+
+      if (username != 'admin' || password != 'admin') {
+        throw Exception('Incorrect username or password');
+      }
+
       DatabaseHelper.currentUser = username;
       await DatabaseHelper.instance.addLog('Logged in');
-      
+
       if (!mounted) return;
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const InventoryScreen()),
       );
-    } else {
+    } catch (e) {
+      final message = e.toString().replaceFirst('Exception: ', '');
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter username and password')),
+        SnackBar(content: Text(message)),
       );
     }
   }
