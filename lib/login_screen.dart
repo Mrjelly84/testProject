@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'inventory_screen.dart';
-import 'database_helper.dart';
+import 'api/database_api.dart';
 import 'log_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -26,8 +26,9 @@ class _LoginScreenState extends State<LoginScreen> {
         throw Exception('Incorrect username or password');
       }
 
-      DatabaseHelper.currentUser = username;
-      await DatabaseHelper.instance.addLog('Logged in');
+      await DatabaseApi.instance.connect();
+      DatabaseApi.instance.setCurrentUser(username);
+      await DatabaseApi.instance.addLog('Logged in');
 
       if (!mounted) return;
       Navigator.pushReplacement(
@@ -36,9 +37,9 @@ class _LoginScreenState extends State<LoginScreen> {
       );
     } catch (e) {
       final message = e.toString().replaceFirst('Exception: ', '');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message)));
     }
   }
 
@@ -63,10 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   obscureText: true,
                 ),
                 const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _login,
-                  child: const Text('Login'),
-                ),
+                ElevatedButton(onPressed: _login, child: const Text('Login')),
               ],
             ),
           ),

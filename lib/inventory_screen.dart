@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'exit_screen.dart';
+import 'api/database_api.dart';
 import 'database_helper.dart';
 
 class InventoryScreen extends StatefulWidget {
@@ -17,13 +18,13 @@ class _InventoryScreenState extends State<InventoryScreen> {
   @override
   void initState() {
     super.initState();
-    _refreshItems();
+    DatabaseApi.instance.connect().then((_) => _refreshItems());
   }
 
   Future<void> _refreshItems() async {
     if (!mounted) return;
     setState(() => _isLoading = true);
-    final items = await DatabaseHelper.instance.readAllItems();
+    final items = await DatabaseApi.instance.getItems();
     if (!mounted) return;
     setState(() {
       _items = items;
@@ -43,7 +44,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
             onPressed: () async {
               final name = _itemController.text;
               if (name.isNotEmpty) {
-                await DatabaseHelper.instance.create(InventoryItem(name: name));
+                await DatabaseApi.instance.addItem(name);
                 await _refreshItems();
               }
               if (context.mounted) {
@@ -69,7 +70,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
             onPressed: () async {
               final name = _itemController.text;
               if (name.isNotEmpty) {
-                await DatabaseHelper.instance.update(
+                await DatabaseApi.instance.updateItem(
                   InventoryItem(id: item.id, name: name),
                 );
                 await _refreshItems();
@@ -86,7 +87,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
   }
 
   void _deleteItem(InventoryItem item) async {
-    await DatabaseHelper.instance.delete(item.id!, item.name);
+    await DatabaseApi.instance.deleteItem(item.id!, item.name);
     _refreshItems();
   }
 
